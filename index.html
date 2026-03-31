@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aryan Maheshwari — Aero Robotics</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:  #1a1a2e;
+      --sky:   #1565c0;
+      --gray:  #6b7280;
+      --light: #f4f6fa;
+      --white: #ffffff;
+      --border:#dde3ee;
+      --shadow:0 4px 24px rgba(26,26,46,0.08);
+      --radius:12px;
+      --font:  'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--white); color: var(--navy); line-height: 1.7; font-size: 16px; }
+    a { color: var(--sky); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    section { padding: 80px 0; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 28px; }
+    .section-label { font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--sky); margin-bottom: 10px; }
+    .section-title { font-size: clamp(26px, 3vw, 36px); font-weight: 800; color: var(--navy); margin-bottom: 48px; line-height: 1.2; }
+    .section-title span { color: var(--sky); }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); height: 64px; }
+    .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 28px; height: 100%; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-weight: 800; font-size: 17px; color: var(--navy); }
+    .nav-logo span { color: var(--sky); }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 14px; font-weight: 600; color: var(--gray); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--navy); text-decoration: none; }
+    .nav-cta { background: var(--navy); color: var(--white) !important; padding: 9px 20px; border-radius: 8px; transition: background 0.2s !important; }
+    .nav-cta:hover { background: var(--sky) !important; text-decoration: none; }
+
+    /* HERO */
+    #hero { position: relative; padding-top: 144px; padding-bottom: 100px; background: linear-gradient(135deg, #f4f6fa 0%, #e8edf5 60%, #dde8f5 100%); border-bottom: 1px solid var(--border); overflow: hidden; }
+    #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.5; }
+    .hero-inner { position: relative; z-index: 1; max-width: 720px; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(21,101,192,0.1); color: var(--sky); font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 6px 14px; border-radius: 100px; margin-bottom: 20px; }
+    .hero-eyebrow::before { content: ''; width: 7px; height: 7px; background: var(--sky); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+    .hero-name { font-size: clamp(42px, 6vw, 68px); font-weight: 900; line-height: 1.0; letter-spacing: -2px; color: var(--navy); margin-bottom: 16px; }
+    .hero-title { font-size: clamp(16px, 2vw, 20px); font-weight: 600; color: var(--sky); margin-bottom: 20px; min-height: 1.5em; }
+    .hero-desc { font-size: 17px; color: #374151; max-width: 580px; margin-bottom: 36px; line-height: 1.85; }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 28px; }
+    .btn-primary { background: var(--navy); color: var(--white); padding: 13px 28px; border-radius: 9px; font-weight: 700; font-size: 15px; transition: background 0.2s, transform 0.15s, box-shadow 0.2s; }
+    .btn-primary:hover { background: var(--sky); text-decoration: none; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(21,101,192,0.3); }
+    .btn-secondary { background: var(--white); color: var(--navy); padding: 13px 28px; border-radius: 9px; font-weight: 700; font-size: 15px; border: 2px solid var(--border); transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s; }
+    .btn-secondary:hover { border-color: var(--sky); color: var(--sky); text-decoration: none; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(21,101,192,0.12); }
+    .hero-tags { display: flex; gap: 10px; flex-wrap: wrap; }
+    .tag { font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: var(--white); color: var(--navy); border: 1.5px solid var(--border); transition: border-color 0.2s, color 0.2s; }
+    .tag:hover { border-color: var(--sky); color: var(--sky); }
+
+    /* SCROLL REVEAL */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left { opacity: 0; transform: translateX(-28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .stagger-1 { transition-delay: 0.08s; }
+    .stagger-2 { transition-delay: 0.16s; }
+    .stagger-3 { transition-delay: 0.24s; }
+    .stagger-4 { transition-delay: 0.32s; }
+    .stagger-5 { transition-delay: 0.40s; }
+    .stagger-6 { transition-delay: 0.48s; }
+
+    /* HERO LOAD ANIMATIONS */
+    @keyframes heroFadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .hero-eyebrow { animation: heroFadeUp 0.6s ease both; animation-delay: 0.1s; }
+    .hero-name { animation: heroFadeUp 0.6s ease both; animation-delay: 0.2s; }
+    .hero-title { animation: heroFadeUp 0.6s ease both; animation-delay: 0.35s; }
+    .hero-desc { animation: heroFadeUp 0.6s ease both; animation-delay: 0.45s; }
+    .hero-btns { animation: heroFadeUp 0.6s ease both; animation-delay: 0.55s; }
+    .hero-tags { animation: heroFadeUp 0.6s ease both; animation-delay: 0.65s; }
+
+    /* FLOATING ICONS */
+    .float-icons { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .float-icon {
+      position: absolute;
+      opacity: 0;
+      color: var(--sky);
+      animation: floatIn 1s ease forwards, floatDrift linear infinite;
+    }
+    @keyframes floatIn { from{opacity:0;transform:scale(0.5)} to{opacity:var(--ico); transform:scale(1)} }
+    @keyframes floatDrift {
+      0%   { transform: translateY(0px)   rotate(0deg); }
+      25%  { transform: translateY(-14px) rotate(4deg); }
+      50%  { transform: translateY(-6px)  rotate(-3deg); }
+      75%  { transform: translateY(-18px) rotate(2deg); }
+      100% { transform: translateY(0px)   rotate(0deg); }
+    }
+    @keyframes floatDriftB {
+      0%   { transform: translateY(0px)   rotate(0deg); }
+      30%  { transform: translateY(12px)  rotate(-5deg); }
+      60%  { transform: translateY(-10px) rotate(3deg); }
+      100% { transform: translateY(0px)   rotate(0deg); }
+    }
+    @keyframes floatDriftC {
+      0%   { transform: translateY(0px)   rotate(0deg) scale(1); }
+      40%  { transform: translateY(-20px) rotate(8deg) scale(1.05); }
+      80%  { transform: translateY(8px)   rotate(-4deg) scale(0.97); }
+      100% { transform: translateY(0px)   rotate(0deg) scale(1); }
+    }
+    @keyframes spinSlow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+    /* SHIMMER on skill cards */
+    .skill-card { position: relative; overflow: hidden; }
+    .skill-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -120%;
+      width: 60%; height: 100%;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.55) 50%, transparent 60%);
+      transition: none;
+      pointer-events: none;
+    }
+    .skill-card:hover::after { animation: shimmer 0.55s ease forwards; }
+    @keyframes shimmer { from{left:-120%} to{left:160%} }
+
+    /* REVEAL FROM RIGHT */
+    .reveal-right { opacity: 0; transform: translateX(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+    /* PULSING TIMELINE DOTS */
+    @keyframes dotPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(21,101,192,0.4); }
+      50%     { box-shadow: 0 0 0 7px rgba(21,101,192,0); }
+    }
+    .timeline-dot { animation: dotPulse 2.4s ease-in-out infinite; }
+
+    /* MARQUEE TECH STRIP */
+    .marquee-wrap { overflow: hidden; background: var(--navy); padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.07); border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .marquee-track { display: flex; gap: 0; white-space: nowrap; animation: marquee 28s linear infinite; }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    .marquee-item { display: inline-flex; align-items: center; gap: 8px; padding: 0 32px; color: rgba(255,255,255,0.55); font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+    .marquee-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--sky); flex-shrink: 0; }
+
+    /* SPINNING RING on feature card */
+    .ar-feature { position: relative; }
+    .ar-ring {
+      position: absolute; top: -60px; right: -60px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      border: 2px dashed rgba(21,101,192,0.15);
+      animation: spinSlow 22s linear infinite;
+      pointer-events: none;
+    }
+    .ar-ring::after {
+      content: '';
+      position: absolute;
+      top: 18px; left: 18px; right: 18px; bottom: 18px;
+      border-radius: 50%;
+      border: 1.5px dashed rgba(21,101,192,0.09);
+    }
+
+    /* GLOW badge on patent */
+    @keyframes glowPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(21,101,192,0.15); }
+      50%     { box-shadow: 0 0 18px 4px rgba(21,101,192,0.18); }
+    }
+    .ar-patent { animation: glowPulse 3s ease-in-out infinite; }
+
+    /* ABOUT */
+    #about { background: var(--white); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+    .about-text { font-size: 16px; color: #374151; line-height: 1.85; }
+    .about-text p + p { margin-top: 16px; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .stat-card { background: var(--light); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 22px; text-align: center; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(21,101,192,0.12); border-color: rgba(21,101,192,0.3); }
+    .stat-num { font-size: 32px; font-weight: 900; color: var(--sky); line-height: 1; margin-bottom: 6px; }
+    .stat-label { font-size: 13px; font-weight: 600; color: var(--gray); }
+    .nav-links a.active { color: var(--navy); }
+
+    /* AERO ROBOTICS FEATURED */
+    #aero-robotics { background: var(--light); }
+    .ar-feature {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      margin-bottom: 40px;
+    }
+    .ar-hero-img {
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+      object-position: center 40%;
+      display: block;
+    }
+    .ar-body { padding: 36px; }
+    .ar-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .ar-badge { background: var(--sky); color: var(--white); font-size: 12px; font-weight: 700; padding: 5px 13px; border-radius: 100px; letter-spacing: 0.5px; }
+    .ar-date { font-size: 13px; font-weight: 600; color: var(--gray); background: var(--light); padding: 4px 12px; border-radius: 100px; border: 1.5px solid var(--border); }
+    .ar-title { font-size: clamp(22px, 3vw, 30px); font-weight: 900; color: var(--navy); margin-bottom: 14px; line-height: 1.2; }
+    .ar-desc { font-size: 15px; color: #374151; line-height: 1.8; margin-bottom: 20px; }
+    .ar-patent {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(21,101,192,0.07);
+      border: 1.5px solid rgba(21,101,192,0.2);
+      color: var(--sky);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 9px;
+      margin-bottom: 20px;
+    }
+    .ar-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .ar-tag { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 100px; background: rgba(21,101,192,0.08); color: var(--sky); }
+
+    /* PHOTO GALLERY */
+    .gallery-header { margin-bottom: 20px; }
+    .gallery-title { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+    .gallery-sub { font-size: 14px; color: var(--gray); }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .gallery-item {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1.5px solid var(--border);
+      aspect-ratio: 4/3;
+      background: var(--border);
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .gallery-item:hover { transform: scale(1.02); box-shadow: 0 8px 32px rgba(26,26,46,0.15); }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gallery-item.video-thumb::after {
+      content: '▶';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: white;
+      background: rgba(0,0,0,0.28);
+      pointer-events: none;
+    }
+    .gallery-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray);
+      font-size: 12px;
+      gap: 8px;
+    }
+    .gallery-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.55));
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 16px 12px 10px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .gallery-item:hover .gallery-caption { opacity: 1; }
+
+    /* Lightbox */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img { max-width: 90vw; max-height: 85vh; border-radius: 8px; object-fit: contain; }
+    #lightbox-close { position: absolute; top: 20px; right: 28px; color: white; font-size: 32px; cursor: pointer; font-weight: 300; line-height: 1; }
+    #lightbox-close:hover { color: #aaa; }
+
+    /* OTHER PROJECTS */
+    #other-projects { background: var(--white); }
+    .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+    .project-card { background: var(--white); border-radius: 14px; border: 1.5px solid var(--border); overflow: hidden; box-shadow: var(--shadow); transition: transform 0.2s, box-shadow 0.2s; }
+    .project-card:hover { transform: translateY(-4px); box-shadow: 0 14px 42px rgba(26,26,46,0.13); }
+    .project-img { width: 100%; height: 190px; background: linear-gradient(135deg, var(--light) 0%, var(--border) 100%); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+    .project-img img { width: 100%; height: 100%; object-fit: cover; }
+    .project-badge { position: absolute; top: 12px; left: 12px; background: var(--sky); color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 100px; }
+    .project-img-placeholder { text-align: center; color: var(--gray); font-size: 12px; padding: 16px; }
+    .project-img-placeholder svg { margin: 0 auto 8px; opacity: 0.35; }
+    .project-body { padding: 24px; }
+    .project-company { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--sky); margin-bottom: 6px; }
+    .project-name { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 10px; line-height: 1.3; }
+    .project-desc { font-size: 14px; color: var(--gray); line-height: 1.7; margin-bottom: 16px; }
+    .project-tags { display: flex; gap: 7px; flex-wrap: wrap; }
+    .project-tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; background: rgba(21,101,192,0.08); color: var(--sky); }
+
+    /* EXPERIENCE */
+    #experience { background: var(--light); }
+    .timeline { position: relative; padding-left: 36px; }
+    .timeline::before { content: ''; position: absolute; left: 10px; top: 8px; bottom: 0; width: 2px; background: var(--border); }
+    .timeline-item { position: relative; margin-bottom: 44px; }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-dot { position: absolute; left: -32px; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: var(--sky); border: 3px solid var(--white); box-shadow: 0 0 0 2px var(--sky); }
+    .exp-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 4px; flex-wrap: wrap; }
+    .exp-role { font-size: 18px; font-weight: 800; color: var(--navy); }
+    .exp-date { font-size: 13px; font-weight: 600; color: var(--gray); white-space: nowrap; background: var(--white); padding: 4px 12px; border-radius: 100px; border: 1.5px solid var(--border); }
+    .exp-company { font-size: 14px; font-weight: 700; color: var(--sky); margin-bottom: 10px; }
+    .exp-desc { font-size: 15px; color: #374151; line-height: 1.75; }
+    .exp-badge { display: inline-block; background: rgba(21,101,192,0.07); color: var(--sky); font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 8px; margin-top: 12px; border: 1px solid rgba(21,101,192,0.18); }
+
+    /* SKILLS */
+    #skills { background: var(--white); }
+    .skills-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .skill-card { background: var(--light); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; transition: border-color 0.2s, transform 0.2s; }
+    .skill-card:hover { border-color: var(--sky); transform: translateY(-3px); }
+    .skill-icon { width: 44px; height: 44px; background: rgba(21,101,192,0.08); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 22px; }
+    .skill-name { font-size: 13px; font-weight: 700; color: var(--navy); line-height: 1.3; }
+
+    /* EDUCATION */
+    #education { background: var(--light); }
+    .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .edu-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 28px; }
+    .edu-school { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+    .edu-degree { font-size: 14px; font-weight: 600; color: var(--sky); margin-bottom: 12px; }
+    .course-list { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .course-list li { font-size: 12px; font-weight: 600; background: var(--light); border: 1.5px solid var(--border); padding: 4px 11px; border-radius: 100px; color: var(--navy); }
+    .awards-list { list-style: none; margin-top: 14px; }
+    .awards-list li { font-size: 13.5px; color: #374151; padding: 7px 0; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 8px; }
+    .awards-list li:last-child { border-bottom: none; }
+    .awards-list li::before { content: '→'; color: var(--sky); font-weight: 700; flex-shrink: 0; }
+
+    /* CONTACT */
+    #contact { background: var(--navy); color: var(--white); padding: 80px 0; }
+    #contact .section-title { color: var(--white); }
+    #contact .section-title span { color: #7bafd4; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .contact-desc { font-size: 17px; color: #9db5cc; line-height: 1.8; margin-bottom: 32px; }
+    .contact-items { display: flex; flex-direction: column; gap: 16px; }
+    .contact-item { display: flex; align-items: center; gap: 14px; font-size: 15px; color: #c0d4e8; font-weight: 500; }
+    .contact-item svg { flex-shrink: 0; opacity: 0.7; }
+    .contact-form-card { background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 32px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 700; color: #9db5cc; margin-bottom: 7px; letter-spacing: 0.5px; }
+    .form-group input, .form-group textarea { width: 100%; background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 11px 14px; font-size: 15px; color: var(--white); font-family: var(--font); transition: border-color 0.2s; }
+    .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.3); }
+    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #7bafd4; }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    .btn-submit { width: 100%; background: var(--sky); color: var(--white); border: none; padding: 13px; border-radius: 9px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.2s; font-family: var(--font); }
+    .btn-submit:hover { background: #1976d2; }
+
+    /* FOOTER */
+    footer { background: #0f1a2b; padding: 28px 0; text-align: center; font-size: 13px; color: #5a7a9a; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .hero-grid, .about-grid, .contact-grid, .edu-grid { grid-template-columns: 1fr; gap: 40px; }
+      .hero-grid { text-align: center; }
+      .hero-btns, .hero-tags { justify-content: center; }
+      .hero-desc { margin: 0 auto 36px; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .projects-grid { grid-template-columns: 1fr; }
+      .skills-grid { grid-template-columns: repeat(2, 1fr); }
+      .nav-links { display: none; }
+      .ar-hero-img { height: 240px; }
+    }
+    @media (max-width: 560px) {
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">Aryan <span>Maheshwari</span></div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#aero-robotics">Aero Robotics</a></li>
+      <li><a href="#other-projects">More Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact" class="nav-cta">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+
+  <!-- Floating tech icons -->
+  <div class="float-icons" aria-hidden="true">
+    <!-- Drone -->
+    <svg class="float-icon" style="--ico:0.13;width:72px;top:12%;right:8%;animation-delay:0.8s;animation-duration:1s,7s" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6">
+      <circle cx="14" cy="14" r="5"/><circle cx="50" cy="14" r="5"/><circle cx="14" cy="50" r="5"/><circle cx="50" cy="50" r="5"/>
+      <line x1="19" y1="14" x2="32" y2="28"/><line x1="45" y1="14" x2="32" y2="28"/><line x1="19" y1="50" x2="32" y2="36"/><line x1="45" y1="50" x2="32" y2="36"/>
+      <circle cx="32" cy="32" r="6"/><circle cx="32" cy="32" r="3" fill="currentColor" opacity="0.3"/>
+      <line x1="8" y1="14" x2="20" y2="14"/><line x1="44" y1="14" x2="56" y2="14"/>
+      <line x1="8" y1="50" x2="20" y2="50"/><line x1="44" y1="50" x2="56" y2="50"/>
+    </svg>
+    <!-- Gear -->
+    <svg class="float-icon" style="--ico:0.10;width:52px;top:55%;right:18%;animation-delay:1.2s;animation-duration:1s,9s;animation-name:floatIn,floatDriftB" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.8">
+      <circle cx="32" cy="32" r="9"/>
+      <path d="M32 10v6M32 48v6M10 32h6M48 32h6M16.5 16.5l4.2 4.2M43.3 43.3l4.2 4.2M16.5 47.5l4.2-4.2M43.3 20.7l4.2-4.2"/>
+      <circle cx="32" cy="32" r="16" stroke-dasharray="4 4"/>
+    </svg>
+    <!-- Satellite signal -->
+    <svg class="float-icon" style="--ico:0.11;width:48px;top:28%;right:28%;animation-delay:1.6s;animation-duration:1s,11s;animation-name:floatIn,floatDriftC" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M20 44 L8 56"/><rect x="16" y="28" width="20" height="14" rx="2" transform="rotate(-45 26 35)"/>
+      <path d="M34 20 a18 18 0 0 1 10 10" /><path d="M38 14 a26 26 0 0 1 12 12" />
+      <circle cx="16" cy="48" r="3" fill="currentColor" opacity="0.3"/>
+    </svg>
+    <!-- Circuit / CPU -->
+    <svg class="float-icon" style="--ico:0.09;width:58px;top:72%;right:6%;animation-delay:2s;animation-duration:1s,8s;animation-name:floatIn,floatDrift" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6">
+      <rect x="18" y="18" width="28" height="28" rx="3"/>
+      <line x1="24" y1="18" x2="24" y2="10"/><line x1="32" y1="18" x2="32" y2="10"/><line x1="40" y1="18" x2="40" y2="10"/>
+      <line x1="24" y1="46" x2="24" y2="54"/><line x1="32" y1="46" x2="32" y2="54"/><line x1="40" y1="46" x2="40" y2="54"/>
+      <line x1="18" y1="24" x2="10" y2="24"/><line x1="18" y1="32" x2="10" y2="32"/><line x1="18" y1="40" x2="10" y2="40"/>
+      <line x1="46" y1="24" x2="54" y2="24"/><line x1="46" y1="32" x2="54" y2="32"/><line x1="46" y1="40" x2="54" y2="40"/>
+      <rect x="24" y="24" width="16" height="16" rx="2" fill="currentColor" opacity="0.07"/>
+    </svg>
+    <!-- Rocket -->
+    <svg class="float-icon" style="--ico:0.12;width:44px;top:40%;right:4%;animation-delay:0.4s;animation-duration:1s,13s;animation-name:floatIn,floatDriftB" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M32 8 C32 8 48 16 48 34 L32 52 L16 34 C16 16 32 8 32 8Z"/>
+      <circle cx="32" cy="28" r="5"/>
+      <path d="M20 44 L14 54 L24 50Z"/><path d="M44 44 L50 54 L40 50Z"/>
+    </svg>
+    <!-- Wind turbine -->
+    <svg class="float-icon" style="--ico:0.10;width:50px;top:15%;right:38%;animation-delay:2.4s;animation-duration:1s,10s;animation-name:floatIn,floatDriftC" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.8">
+      <line x1="32" y1="32" x2="32" y2="58"/>
+      <circle cx="32" cy="32" r="3" fill="currentColor" opacity="0.3"/>
+      <path d="M32 32 L32 8 C32 8 26 14 28 22Z"/>
+      <path d="M32 32 L54 42 C54 42 52 34 46 32Z"/>
+      <path d="M32 32 L10 42 C10 42 14 36 20 36Z"/>
+    </svg>
+  </div>
+
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Founder &amp; CEO · Aero Robotics</div>
+      <h1 class="hero-name">Aryan<br>Maheshwari</h1>
+      <p class="hero-title" id="hero-typewriter"></p>
+      <p class="hero-desc">
+        I build robotic systems that keep people out of harm's way. From a patent-pending drone payload for wind turbine maintenance to universal drone attachment systems — I engineer tools for the hardest environments on earth.
+      </p>
+      <div class="hero-btns">
+        <a href="#aero-robotics" class="btn-primary">See My Work</a>
+        <a href="#contact" class="btn-secondary">Get in Touch</a>
+      </div>
+      <div class="hero-tags">
+        <span class="tag">ArduPilot / Pixhawk</span>
+        <span class="tag">Drone Systems</span>
+        <span class="tag">Fusion 360</span>
+        <span class="tag">Patent Pending</span>
+        <span class="tag">Python / Java</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE STRIP -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item"><span class="marquee-dot"></span>ArduPilot</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Pixhawk</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Fusion 360</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Patent Pending</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Wind Energy</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Payload Design</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Drone Systems</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Robotics</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Aerospace</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Climate Tech</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Field Engineering</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>NASA HAS Alumni</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>ArduPilot</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Pixhawk</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Fusion 360</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Patent Pending</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Wind Energy</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Payload Design</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Drone Systems</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Robotics</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Aerospace</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Climate Tech</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Field Engineering</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>NASA HAS Alumni</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="section-label">About</div>
+    <h2 class="section-title">Engineering <span>with purpose</span></h2>
+    <div class="about-grid">
+      <div class="about-text reveal-left">
+        <p>I'm the founder and CEO of Aero Robotics — a company I started to automate dangerous tasks in environments where human exposure carries real risk.</p>
+        <p>My work sits at the intersection of drone systems, mechanical payload design, and field-level engineering. I led the full design cycle of a drone-deployed sensor payload for wind turbine blades — from flight stack configuration on ArduPilot/Pixhawk to surface chemistry and adhesion — and that project earned a USPTO patent application in 2025.</p>
+        <p>I've interned at two ClimateTech startups, completed NASA's Aerospace Scholars program, and competed in national engineering competitions. I'm actively looking for research mentors and collaborators who want to work on real deployment problems at the intersection of aerospace, robotics, and sustainable infrastructure.</p>
+      </div>
+      <div class="stats-grid reveal-right">
+        <div class="stat-card reveal stagger-1">
+          <div class="stat-num" data-count="1">0</div>
+          <div class="stat-label">Patent Pending<br>(USPTO)</div>
+        </div>
+        <div class="stat-card reveal stagger-2">
+          <div class="stat-num" data-count="3" data-suffix="+">0</div>
+          <div class="stat-label">Years Drone<br>Engineering</div>
+        </div>
+        <div class="stat-card reveal stagger-3">
+          <div class="stat-num" data-count="2">0</div>
+          <div class="stat-label">ClimateTech<br>Internships</div>
+        </div>
+        <div class="stat-card reveal stagger-4">
+          <div class="stat-num">NASA</div>
+          <div class="stat-label">HAS Program<br>Alumni</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AERO ROBOTICS FEATURED PROJECT -->
+<section id="aero-robotics">
+  <div class="container">
+    <div class="section-label">Featured Company</div>
+    <h2 class="section-title">Aero <span>Robotics</span></h2>
+
+    <!-- Main Feature Card -->
+    <div class="ar-feature reveal">
+      <div class="ar-ring"></div>
+      <img class="ar-hero-img" src="images/IMG_3399_thumb.jpg" alt="Aero Robotics — industrial drone with sensor payload">
+      <div class="ar-body">
+        <div class="ar-meta">
+          <span class="ar-badge">Founder &amp; CEO</span>
+          <span class="ar-badge" style="background:#0a7c5a;">Patent Pending</span>
+          <span class="ar-date">May 2025 – Present</span>
+        </div>
+        <h3 class="ar-title">Drone-Based Wind Turbine Sensor Deployment</h3>
+        <p class="ar-desc">
+          Aero Robotics builds robotic systems that automate dangerous tasks in harsh environments. The company's first project is a drone-deployed payload that places sensors directly on wind turbine blades — eliminating the need for technicians to work at dangerous heights. The system handles surface preparation, composite-safe cleaning, resin tape adhesion, and precision sensor placement, all within strict drone payload weight limits.
+        </p>
+        <p class="ar-desc">
+          I designed and built the full system: mechanical payload design in Fusion 360, flight stack configuration on ArduPilot and Pixhawk, field integration testing, and iteration through real deployment trials. The work earned a USPTO provisional patent application in 2025. Every design decision was shaped by what actually works in the field — not just on a bench.
+        </p>
+        <div class="ar-patent">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          USPTO Application 63/883,099 — Filed September 15, 2025 · Co-inventor: Aleksey Jarvich
+        </div>
+        <div class="ar-tags">
+          <span class="ar-tag">ArduPilot</span>
+          <span class="ar-tag">Pixhawk</span>
+          <span class="ar-tag">Payload Design</span>
+          <span class="ar-tag">Autodesk Fusion 360</span>
+          <span class="ar-tag">Adhesion Systems</span>
+          <span class="ar-tag">Wind Energy</span>
+          <span class="ar-tag">Industrial Robotics</span>
+          <span class="ar-tag">Field Testing</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Photo & Video Gallery -->
+    <div class="gallery-header">
+      <div class="gallery-title">Sensor Deployment & Field Photos</div>
+      <div class="gallery-sub">Patent-pending sensor system deployed on wind turbine blades at altitude</div>
+    </div>
+    <div class="gallery-grid">
+
+      <!-- Sensor deployment photos (real-world proof of concept) -->
+      <div class="gallery-item" onclick="openLightbox('images/sensor_installed_1.jpg')" style="display:none" data-sensor>
+        <img src="images/sensor_installed_1.jpg" alt="Sensors installed on wind turbine blade — drone POV" onerror="this.closest('[data-sensor]').style.display='none'">
+        <div class="gallery-caption">Sensors deployed — wind turbine blade, 200+ ft altitude</div>
+      </div>
+
+      <div class="gallery-item" onclick="openLightbox('images/sensor_installed_2.jpg')" style="display:none" data-sensor>
+        <img src="images/sensor_installed_2.jpg" alt="Close-up of sensors attached to turbine blade" onerror="this.closest('[data-sensor]').style.display='none'">
+        <div class="gallery-caption">Sensor placement — mid-blade, composite surface</div>
+      </div>
+
+      <div class="gallery-item" onclick="openLightbox('images/sensor_installed_3.jpg')" style="display:none" data-sensor>
+        <img src="images/sensor_installed_3.jpg" alt="Sensors on turbine blade with farmland below" onerror="this.closest('[data-sensor]').style.display='none'">
+        <div class="gallery-caption">Deployed sensors — farmland panorama below</div>
+      </div>
+
+      <!-- Working on drone — person shots -->
+      <div class="gallery-item" onclick="openLightbox('images/working_build.jpg')">
+        <img src="images/working_build.jpg" alt="Aryan building drone frame at desk with tools" onerror="this.style.display='none'">
+        <div class="gallery-caption">Building the flight stack — ESCs, flight controller, wiring</div>
+      </div>
+
+      <div class="gallery-item" onclick="openLightbox('images/working_garage.jpg')">
+        <img src="images/working_garage.jpg" alt="Aryan in garage with Matrice and controller" onerror="this.style.display='none'">
+        <div class="gallery-caption">Pre-flight systems check — garage lab</div>
+      </div>
+
+      <div class="gallery-item" onclick="openLightbox('images/working_field_controller.jpg')">
+        <img src="images/working_field_controller.jpg" alt="Aryan operating RC Pro outdoors with payload drone" onerror="this.style.display='none'">
+        <div class="gallery-caption">Field operation — RC Pro, payload attached</div>
+      </div>
+
+      <div class="gallery-item" onclick="openLightbox('images/working_park_prep.jpg')">
+        <img src="images/working_park_prep.jpg" alt="Aryan attaching payload arm to Matrice in park" onerror="this.style.display='none'">
+        <div class="gallery-caption">Payload arm attachment — field prep</div>
+      </div>
+
+      <!-- Hardware shots -->
+      <div class="gallery-item" onclick="openLightbox('images/IMG_3399_thumb.jpg')">
+        <img src="images/IMG_3399_thumb.jpg" alt="Industrial drone with sensor payload" onerror="this.style.display='none'">
+        <div class="gallery-caption">DJI Matrice — sensor payload ready</div>
+      </div>
+
+      <div class="gallery-item" onclick="openLightbox('images/IMG_0898_thumb.jpg')">
+        <img src="images/IMG_0898_thumb.jpg" alt="Drone with orange payload in flight" onerror="this.style.display='none'">
+        <div class="gallery-caption">Hover test — payload attached, flight footage</div>
+      </div>
+
+    </div>
+
+    <script>
+      // Show sensor images if they load successfully
+      document.querySelectorAll('[data-sensor]').forEach(el => {
+        const img = el.querySelector('img');
+        img.addEventListener('load', () => { el.style.display = ''; });
+      });
+    </script>
+
+    <!-- Note about HEIC -->
+    <p style="font-size:13px;color:var(--gray);margin-top:18px;text-align:center;">
+      High-resolution originals available in the <code>images/</code> folder.
+    </p>
+  </div>
+</section>
+
+<!-- OTHER PROJECTS -->
+<section id="other-projects">
+  <div class="container">
+    <div class="section-label">More Work</div>
+    <h2 class="section-title">Other <span>Projects</span></h2>
+    <div class="projects-grid">
+
+      <!-- Universal Drone Design -->
+      <div class="project-card">
+        <div class="project-img">
+          <span class="project-badge">Senior Capstone</span>
+          <!-- TO ADD PHOTOS: place images in the images/ folder and replace the placeholder below with:
+               <img src="images/your-photo.jpg" alt="Universal Drone Design"> -->
+          <div class="project-img-placeholder">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+            </svg>
+            <p>Photos coming soon</p>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-company">Senior Capstone · Engineering Academy</div>
+          <h3 class="project-name">Universal Drone Design</h3>
+          <p class="project-desc">Designed and prototyped a universal drone attachment system enabling cross-brand payload compatibility and rapid modular swaps for field operations. Iterated through 3D-printed prototypes to improve vibration isolation, structural stability, and secure sensor deployment across multiple drone platforms.</p>
+          <div class="project-tags">
+            <span class="project-tag">3D Prototyping</span>
+            <span class="project-tag">Modular Systems</span>
+            <span class="project-tag">Fusion 360</span>
+            <span class="project-tag">Field Testing</span>
+            <span class="project-tag">Capstone</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TSA Drone Challenge -->
+      <div class="project-card">
+        <div class="project-img">
+          <span class="project-badge">TSA 2026</span>
+          <!-- TO ADD PHOTOS: place images in the images/ folder and replace the placeholder below with:
+               <img src="images/your-photo.jpg" alt="TSA Drone Challenge"> -->
+          <div class="project-img-placeholder">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+            <p>Photos coming soon</p>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-company">Technology Student Association · 2026</div>
+          <h3 class="project-name">TSA Drone Challenge</h3>
+          <p class="project-desc">Competed in the 2026 TSA Drone Challenge, applying drone systems knowledge in a competitive engineering context. Combined technical flight skills, mission planning, and systems design to compete at the national level.</p>
+          <div class="project-tags">
+            <span class="project-tag">Competition</span>
+            <span class="project-tag">Drone Systems</span>
+            <span class="project-tag">Mission Planning</span>
+            <span class="project-tag">TSA</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- How to add photos note -->
+    <p style="font-size:13px;color:var(--gray);margin-top:24px;text-align:center;padding:12px;background:var(--light);border-radius:8px;border:1.5px dashed var(--border);">
+      📸 <strong>To add photos for these projects:</strong> drop your images into the <code>images/</code> folder, then replace the <code>&lt;!-- TO ADD PHOTOS --&gt;</code> comment in <code>portfolio.html</code> with an <code>&lt;img&gt;</code> tag pointing to your file.
+    </p>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <div class="section-label">Career</div>
+    <h2 class="section-title">Work <span>Experience</span></h2>
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="exp-header">
+          <div class="exp-role">Founder & CEO</div>
+          <div class="exp-date">May 2025 – Present</div>
+        </div>
+        <div class="exp-company"><a href="https://aerorobotics.ai" target="_blank">Aero Robotics</a></div>
+        <p class="exp-desc">Founded Aero Robotics to automate hazardous tasks in harsh industrial and remote environments. Led the full design cycle of the company's first commercial project — a drone-deployed sensor payload for wind turbine blade maintenance. Currently leading customer discovery and product design for a universal drone attachment platform to expand robotic capabilities across industrial deployments.</p>
+        <div class="exp-badge">Patent Pending — USPTO Application 63/883,099 · Sep 15, 2025</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="exp-header">
+          <div class="exp-role">Commercial Operations Intern</div>
+          <div class="exp-date">Jun 2024 – Aug 2024</div>
+        </div>
+        <div class="exp-company"><a href="https://www.marsmaterials.tech" target="_blank">Mars Materials</a> · Backed by Breakthrough Energy</div>
+        <p class="exp-desc">Youngest intern on the team. Worked directly with the CEO on fundraising — preparing investment decks, reviewing investor theses, drafting introductory communications. Conducted site visits to the pilot system at Shell Technology Center. Captured post-run technical debriefs and turned them into reusable operational workflows.</p>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="exp-header">
+          <div class="exp-role">Product Design Intern</div>
+          <div class="exp-date">May 2023 – Aug 2023</div>
+        </div>
+        <div class="exp-company"><a href="https://predyct.io" target="_blank">Predyct</a> · ClimateTech</div>
+        <p class="exp-desc">Conducted in-depth research on wind turbine blade condition monitoring systems. Collaborated with the systems engineer on feature requirements and competitive analysis. Contributed to the design basis that shaped the company's core product direction.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <div class="section-label">Technical</div>
+    <h2 class="section-title">Skills &amp; <span>Tools</span></h2>
+    <div class="skills-grid">
+      <div class="skill-card reveal stagger-1"><div class="skill-icon">✈️</div><div class="skill-name">ArduPilot / Pixhawk Flight Stack</div></div>
+      <div class="skill-card reveal stagger-2"><div class="skill-icon">🛠️</div><div class="skill-name">Autodesk Fusion 360 (Certified)</div></div>
+      <div class="skill-card reveal stagger-3"><div class="skill-icon">🐍</div><div class="skill-name">Python</div></div>
+      <div class="skill-card reveal stagger-4"><div class="skill-icon">☕</div><div class="skill-name">Java</div></div>
+      <div class="skill-card reveal stagger-1"><div class="skill-icon">🌐</div><div class="skill-name">HTML / CSS</div></div>
+      <div class="skill-card reveal stagger-2"><div class="skill-icon">🔧</div><div class="skill-name">Soldering &amp; Electrical Engineering</div></div>
+      <div class="skill-card reveal stagger-3"><div class="skill-icon">🤖</div><div class="skill-name">AI &amp; Prompt Engineering</div></div>
+      <div class="skill-card reveal stagger-4"><div class="skill-icon">⚛️</div><div class="skill-name">Quantum Computing (Certified)</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="container">
+    <div class="section-label">Background</div>
+    <h2 class="section-title">Education &amp; <span>Achievements</span></h2>
+    <div class="edu-grid">
+      <div class="edu-card">
+        <div class="edu-school">Lawrence E. Elkins High School</div>
+        <div class="edu-degree">Senior · Engineering Academy · Class of 2026</div>
+        <p style="font-size:14px;color:#6b7280;">Specialized in Engineering & Computer Science with honors. Fort Bend ISD.</p>
+        <ul class="course-list">
+          <li>AP Physics C</li><li>AP Calculus BC</li><li>Capstone Engineering</li>
+          <li>Aerospace Engineering</li><li>AP CS Principles</li><li>AP CS A</li>
+          <li>Engineering Science</li><li>Intro to Engineering</li>
+        </ul>
+      </div>
+      <div class="edu-card">
+        <div class="edu-school">Honors & Activities</div>
+        <div class="edu-degree">Selected Recognition</div>
+        <ul class="awards-list">
+          <li>Student Body Historian, Elkins HS (2025–2026)</li>
+          <li>NASA High School Aerospace Scholars (HAS) Program</li>
+          <li>NASA TechRise Challenge (Jun–Jul 2024)</li>
+          <li>TEX-E ClimateTech Entrepreneurship Bootcamp (Apr 2025)</li>
+          <li>UT Austin CS Academy — Robotics Certificate</li>
+          <li>Academic Excellence Award (2022–2025)</li>
+          <li>District Award — VEX Robotics Competition (2023)</li>
+          <li>Varsity Golf, 4 Athletic Awards (2022–2025)</li>
+          <li>1st Degree Black Belt, Tae Kwon Do</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-label" style="color:#7bafd4;">Let's Connect</div>
+    <h2 class="section-title">Interested in <span>working together?</span></h2>
+    <div class="contact-grid">
+      <div>
+        <p class="contact-desc">I'm looking for professors, researchers, and mentors working at the intersection of robotics, aerospace, and climate infrastructure. If you're doing work I could contribute to — or want to know more about what Aero Robotics is building — I'd love to hear from you.</p>
+        <div class="contact-items">
+          <div class="contact-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            aryan.maheshwariTX@gmail.com
+          </div>
+          <div class="contact-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5 19.79 19.79 0 0 1 1.61 4.88 2 2 0 0 1 3.58 2.7h3a2 2 0 0 1 2 1.72c.127.96.36 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 10.4a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.34 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            (281) 763-9846
+          </div>
+          <div class="contact-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <a href="https://aerorobotics.ai" target="_blank" style="color:#7bafd4;">aerorobotics.ai</a>
+          </div>
+          <div class="contact-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Fort Bend, Texas
+          </div>
+        </div>
+      </div>
+      <div class="contact-form-card">
+        <div class="form-group"><label>YOUR NAME</label><input id="cf-name" type="text" placeholder="Professor / Dr. / Your name"></div>
+        <div class="form-group"><label>EMAIL</label><input id="cf-email" type="email" placeholder="you@university.edu"></div>
+        <div class="form-group"><label>INSTITUTION</label><input id="cf-inst" type="text" placeholder="University / Lab / Organization"></div>
+        <div class="form-group"><label>MESSAGE</label><textarea id="cf-msg" placeholder="Tell me about your research or what you'd like to connect on..."></textarea></div>
+        <button class="btn-submit" id="cf-send">Send Message</button>
+        <p id="cf-status" style="margin-top:12px;font-size:13px;color:#7bafd4;text-align:center;display:none;"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p>© 2026 Aryan Maheshwari · Founder, <a href="https://aerorobotics.ai" target="_blank" style="color:#5a7a9a;">Aero Robotics</a> · Fort Bend, Texas</p>
+  </div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <span id="lightbox-close" onclick="closeLightbox()">×</span>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+  /* ── Lightbox ─────────────────────────────────────────── */
+  function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+  /* ── Sensor image auto-show ───────────────────────────── */
+  document.querySelectorAll('[data-sensor]').forEach(el => {
+    el.querySelector('img').addEventListener('load', () => { el.style.display = ''; });
+  });
+
+  /* ── Scroll Reveal ────────────────────────────────────── */
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('visible');
+        revealObserver.unobserve(el.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revealObserver.observe(el));
+
+  /* ── Animated Counters ────────────────────────────────── */
+  function animateCount(el) {
+    const target = parseInt(el.dataset.count);
+    const suffix = el.dataset.suffix || '';
+    const duration = 1200;
+    const start = performance.now();
+    function tick(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(eased * target) + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting && el.target.dataset.count) {
+        animateCount(el.target);
+        counterObserver.unobserve(el.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
+
+  /* ── Hero Canvas Particles ────────────────────────────── */
+  (function() {
+    const canvas = document.getElementById('hero-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [];
+    const COUNT = 55;
+
+    function resize() {
+      W = canvas.width  = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function rand(a, b) { return a + Math.random() * (b - a); }
+
+    for (let i = 0; i < COUNT; i++) {
+      particles.push({
+        x: rand(0, W), y: rand(0, H),
+        vx: rand(-0.25, 0.25), vy: rand(-0.2, 0.2),
+        r: rand(1.5, 3.5), o: rand(0.2, 0.55)
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+        if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(21,101,192,${p.o})`;
+        ctx.fill();
+      });
+      // draw connecting lines
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(21,101,192,${0.12 * (1 - dist/120)})`;
+            ctx.lineWidth = 1;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  /* ── Typewriter Hero Subtitle ─────────────────────────── */
+  (function() {
+    const el = document.getElementById('hero-typewriter');
+    if (!el) return;
+    const phrases = ['Aerospace · Robotics · Climate Tech', 'Founder & CEO · Aero Robotics', 'Building for harsh environments'];
+    let pi = 0, ci = 0, deleting = false;
+    function type() {
+      const phrase = phrases[pi];
+      if (!deleting) {
+        el.textContent = phrase.slice(0, ++ci);
+        if (ci === phrase.length) { deleting = true; setTimeout(type, 2200); return; }
+      } else {
+        el.textContent = phrase.slice(0, --ci);
+        if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; }
+      }
+      setTimeout(type, deleting ? 35 : 65);
+    }
+    setTimeout(type, 900);
+  })();
+
+  /* ── Contact Form ─────────────────────────────────────── */
+  document.getElementById('cf-send').addEventListener('click', function() {
+    const name  = document.getElementById('cf-name').value.trim();
+    const email = document.getElementById('cf-email').value.trim();
+    const inst  = document.getElementById('cf-inst').value.trim();
+    const msg   = document.getElementById('cf-msg').value.trim();
+    const status = document.getElementById('cf-status');
+
+    if (!name || !email || !msg) {
+      status.style.color = '#f87171';
+      status.textContent = 'Please fill in your name, email, and message.';
+      status.style.display = 'block';
+      return;
+    }
+
+    const subject = encodeURIComponent(`Research Inquiry from ${name}${inst ? ' — ' + inst : ''}`);
+    const body = encodeURIComponent(
+      `Hi Aryan,\n\n${msg}\n\n—\n${name}${inst ? '\n' + inst : ''}\n${email}`
+    );
+    window.location.href = `mailto:aryan.maheshwariTX@gmail.com?subject=${subject}&body=${body}`;
+
+    status.style.color = '#7bafd4';
+    status.textContent = '✓ Opening your email client — message pre-filled and ready to send.';
+    status.style.display = 'block';
+  });
+
+  /* ── Active Nav Highlight ─────────────────────────────── */
+  (function() {
+    const sections = document.querySelectorAll('section[id]');
+    const links = document.querySelectorAll('.nav-links a');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const a = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+          if (a) a.classList.add('active');
+        }
+      });
+    }, { threshold: 0.35 });
+    sections.forEach(s => io.observe(s));
+  })();
+</script>
+
+</body>
+</html>
